@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Welcome to firebase</h1>
+    <button id="signInBtn">Sign in with Google</button>
+    <div id="disp"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js";
+        
+        import { GoogleAuthProvider, getAuth, signInWithPopup, sendEmailVerification } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js";
+
+        const firebaseConfig = {
+          apiKey:"AIzaSyB-yhz2yg8WF2YkpZ1PPms3bA6ML8f4a1g",
+          authDomain: "fir-ef8fd.firebaseapp.com",
+          projectId: "fir-ef8fd",
+          storageBucket: "fir-ef8fd.appspot.com",
+          messagingSenderId: "406966967947",
+          appId: "1:406966967947:web:598fb36e375eb4ffcc3e8e"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const provider = new GoogleAuthProvider();
+        const auth = getAuth();
+
+        document.getElementById('signInBtn').addEventListener("click", ()=>{
+            signInWithPopup(auth, provider)
+            .then((result)=>{
+                console.log(result);
+                let name = result.user.displayName;
+                let email = result.user.email;
+                let image = result.user.photoURL
+                disp.innerHTML = `
+                    <h1>
+                        Welcome, ${name}    
+                    </h1>
+                    <h1>
+                        ${email}    
+                    </h1>
+                    <img src='${image}'/>
+                `
+                sendEmailVerification(auth.currentUser)
+                .then(()=>{
+                    console.log("Email sent");
+                })
+                .catch((err)=>{
+                    console.log(err);
+                })
+                window.location.href = "dashboard.html"
+            })
+            .catch((err)=>{
+                console.log(err);
+            })
+        })
+    </script>
+</body>
+</html>

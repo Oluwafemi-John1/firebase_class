@@ -9,10 +9,14 @@
 <body>
     dashboard
     <button id="signOutBtn">Sign out</button>
+
+    <input type="text" placeholder="enter chat" id="msgInput">
+    <button id="sendChat">Send</button>
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-database.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyB-yhz2yg8WF2YkpZ1PPms3bA6ML8f4a1g",
@@ -20,12 +24,15 @@
           projectId: "fir-ef8fd",
           storageBucket: "fir-ef8fd.appspot.com",
           messagingSenderId: "406966967947",
-          appId: "1:406966967947:web:598fb36e375eb4ffcc3e8e"
+          appId: "1:406966967947:web:598fb36e375eb4ffcc3e8e",
+          databaseURL: "https://fir-ef8fd-default-rtdb.firebaseio.com"
         };
    
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth()
+        const database = getDatabase(app);
+       
         onAuthStateChanged(auth, (user)=>{
             if(user){
                 console.log(user);
@@ -43,6 +50,24 @@
             .catch((err)=>{
                 console.log(err);
             })
+        })
+
+       
+        sendChat.addEventListener("click", ()=>{
+            let date = new Date()
+            let theUser = auth.currentUser.displayName
+            let chatObj = {
+                message: msgInput.value,
+                time: date.toLocaleTimeString(),
+                username: theUser
+            }
+            console.log(chatObj);
+            // message = ""
+
+            let databaseref = ref(database, "chats")
+            set(databaseref, chatObj)
+
+            // localStorage.setItem("chats", chatObj)
         })
     </script>
 </body>

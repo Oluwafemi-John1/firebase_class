@@ -33,7 +33,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth()
         const database = getDatabase(app);
-        let todoIndex = 0
+        let todoIndex = 0;
        
         onAuthStateChanged(auth, (user)=>{
             if(user){
@@ -66,27 +66,29 @@
             console.log(chatObj);
             // message = ""
 
-            let chatRef = ref(database, "chats")
+            let chatRef = ref(database, `chats/${todoIndex}`)
+
             set(chatRef, chatObj)
     
             // localStorage.setItem("chats", chatObj)
         })
         let chatRef = ref(database, "chats")
         onValue(chatRef, (snapshot)=>{
-            // show.innerHTML = ""
+            show.innerHTML = ""
             let data = snapshot.val()
             console.log(data)
-            // todoIndex = data.length
-            // data.map((item,index)=>{
-            //     show.innerHTML += `
-            //     <div>
-            //         <p>${index+1}</p>
-            //         <p>${item.username}</p>
-            //         <p>${item.message}</p>
-            //         <p>${item.time}</p>
-            //     </div>
-            //     `
-            // })
+            todoIndex = data.length
+            console.log(todoIndex);
+            data.map((item,index)=>{
+                show.innerHTML += `
+                <div>
+                    <p>${index+1}</p>
+                    <p>${item.username}</p>
+                    <p>${item.message}</p>
+                    <p>${item.time}</p>
+                </div>
+                `
+            })
         })
     </script>
 </body>

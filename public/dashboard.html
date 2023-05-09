@@ -12,11 +12,12 @@
 
     <input type="text" placeholder="enter chat" id="msgInput">
     <button id="sendChat">Send</button>
+    <div id="show"></div>
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js";
-        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-database.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-database.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyB-yhz2yg8WF2YkpZ1PPms3bA6ML8f4a1g",
@@ -32,6 +33,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth()
         const database = getDatabase(app);
+        let todoIndex = 0
        
         onAuthStateChanged(auth, (user)=>{
             if(user){
@@ -64,10 +66,27 @@
             console.log(chatObj);
             // message = ""
 
-            let databaseref = ref(database, "chats")
-            set(databaseref, chatObj)
-
+            let chatRef = ref(database, "chats")
+            set(chatRef, chatObj)
+    
             // localStorage.setItem("chats", chatObj)
+        })
+        let chatRef = ref(database, "chats")
+        onValue(chatRef, (snapshot)=>{
+            // show.innerHTML = ""
+            let data = snapshot.val()
+            console.log(data);
+            // todoIndex = data.length
+            // data.map((item,index)=>{
+            //     show.innerHTML += `
+            //     <div>
+            //         <p>${index+1}</p>
+            //         <p>${item.username}</p>
+            //         <p>${item.message}</p>
+            //         <p>${item.time}</p>
+            //     </div>
+            //     `
+            // })
         })
     </script>
 </body>
